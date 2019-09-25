@@ -52,7 +52,7 @@
     (println (write-edn result))))
 
 (defn display-number [n char]
-  (let [x (js/Math.ceil (/ n 100))] (str (string/join "" (repeat x char)) " " n)))
+  (let [x (js/Math.ceil (/ n 200))] (str (string/join "" (repeat x char)) " " n)))
 
 (defn format-records [info]
   (->> info
@@ -145,7 +145,7 @@
                                     (vec))))))))]
     (fs/writeFileSync (path/join js/__dirname "result.edn") (write-edn result))))
 
-(defn analyze! [] (comment display-graph!) (comment write-info!) (daily-commits!))
+(defn analyze! [] (display-graph!) (comment write-info!) (comment daily-commits!))
 
 (defn main! [] (println "Started.") (analyze!))
 

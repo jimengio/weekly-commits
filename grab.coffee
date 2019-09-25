@@ -16,15 +16,10 @@ endTime = today.minus(month: 1).endOf('month')
 console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
 
 fetchSingleCommit = (repo, hash) ->
-  try
-    result = await axios
-      baseURL: 'https://api.github.com/'
-      url: "/repos/#{repo}/commits/#{hash}"
-      headers: headers
-  catch error
-    console.log "failed to get commit", repo, hash
-    console.error error
-    return null
+  result = await axios
+    baseURL: 'https://api.github.com/'
+    url: "/repos/#{repo}/commits/#{hash}"
+    headers: headers
 
   return result.data
 
@@ -53,24 +48,30 @@ fetchCommits = (repo) ->
       break
 
     page = page + 1
-    console.log "contine since", response.headers.link, page
+    console.log "continue next page", page
 
   # console.log list.data
   console.log "result from repo", list.length
 
   result = []
   page = 0
-  pageSize = 40
+  pageSize = 50
   remaining = list
 
   while remaining.length > 0
-    batchResult = await Promise.all remaining[...pageSize].map (c) ->
-      commit = await fetchSingleCommit(repo, c.sha)
-      return
-        sha: commit.sha
-        commit: commit.commit
-        stats: commit.stats
-    result = result.concat batchResult
+    try
+      batchResult = await Promise.all remaining[...pageSize].map (c) ->
+        commit = await fetchSingleCommit(repo, c.sha)
+        return
+          sha: commit.sha
+          commit: commit.commit
+          stats: commit.stats
+      result = result.concat batchResult
+    catch error
+      console.error "Failed to fetch, would retry"
+      if error.isAxiosError
+        console.log error.code, error.config
+      continue
 
     remaining = remaining[pageSize..]
     console.log "remaining:", remaining.length
