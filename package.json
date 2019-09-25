@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "webpack --config build/webpack.common.js --mode production",
-    "dev": "webpack-dev-server --config build/webpack.common.js --mode development --open"
+    "dev": "webpack-dev-server --config build/webpack.common.js --mode development"
   },
   "dependencies": {
     "@emotion/core": "^10.0.17",

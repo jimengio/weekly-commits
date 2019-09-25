@@ -10,7 +10,10 @@ headers =
 
 today = DateTime.local()
 
-startTime = today.minus(weeks: 1).startOf('day')
+startTime = today.minus(month: 1).startOf('month')
+endTime = today.minus(month: 1).endOf('month')
+
+console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
 
 fetchSingleCommit = (repo, hash) ->
   result = await axios
@@ -27,6 +30,7 @@ fetchCommits = (repo) ->
     headers: headers
     params:
       since: startTime.toISO()
+      until: endTime.toISO()
 
   result = await Promise.all list.data.map (c) ->
     commit = await fetchSingleCommit(repo, c.sha)

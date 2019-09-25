@@ -49,6 +49,16 @@ module.exports = {
       errors: true
     },
     inline: true,
-    hot: true
+    hot: true,
+    stats: {
+      all: false,
+      colors: true,
+      errors: true,
+      errorDetails: true,
+      performance: true,
+      reasons: true,
+      timings: true,
+      warnings: true,
+    },
   }
 };
