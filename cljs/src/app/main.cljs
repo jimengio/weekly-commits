@@ -52,14 +52,14 @@
     (println (write-edn result))))
 
 (defn display-number [n char]
-  (let [x (js/Math.ceil (/ n 40))] (str (string/join "" (repeat x char)) " " n)))
+  (let [x (js/Math.ceil (/ n 100))] (str (string/join "" (repeat x char)) " " n)))
 
 (defn format-records [info]
   (->> info
        (mapcat
         (fn [[author work-info]]
           (concat
-           ["\n" "\n" author]
+           ["\n" author]
            (->> work-info
                 (mapcat
                  (fn [[project changes]]
@@ -82,7 +82,12 @@
                     (group-by
                      (fn [info]
                        (let [author (get-in info [:commit :author :name])]
-                         (case author "yuan jia" "yuanjiaCN" "Mihu Seen" "MihuSeen" author))))
+                         (case author
+                           "yuan jia" "yuanjiaCN"
+                           "Mihu Seen" "MihuSeen"
+                           "Dave" "wangcch"
+                           "yuelei" "YueLei"
+                           author))))
                     (map-vals
                      (fn [v]
                        (->> v
@@ -100,7 +105,7 @@
                                     (reduce
                                      (fn [acc record]
                                        (if (or (> (:add record) 5000)
-                                               (> (:delete record) 500))
+                                               (> (- (:delete record) (:add record)) 500))
                                          (do
                                           (println "skip large changes" (pr-str record))
                                           acc)

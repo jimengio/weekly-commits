@@ -16,12 +16,15 @@ endTime = today.minus(month: 1).endOf('month')
 console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
 
 fetchSingleCommit = (repo, hash) ->
-  console.log "fetching single commit:", repo, hash
-
-  result = await axios
-    baseURL: 'https://api.github.com/'
-    url: "/repos/#{repo}/commits/#{hash}"
-    headers: headers
+  try
+    result = await axios
+      baseURL: 'https://api.github.com/'
+      url: "/repos/#{repo}/commits/#{hash}"
+      headers: headers
+  catch error
+    console.log "failed to get commit", repo, hash
+    console.error error
+    return null
 
   return result.data
 
@@ -56,16 +59,21 @@ fetchCommits = (repo) ->
   console.log "result from repo", list.length
 
   result = []
-  counter = 0
+  page = 0
+  pageSize = 40
+  remaining = list
 
-  for c in list
-    commit = await fetchSingleCommit(repo, c.sha)
-    result.push
-      sha: commit.sha
-      commit: commit.commit
-      stats: commit.stats
-    counter += 1
-    console.log "counting to", counter, "of total", list.length
+  while remaining.length > 0
+    batchResult = await Promise.all remaining[...pageSize].map (c) ->
+      commit = await fetchSingleCommit(repo, c.sha)
+      return
+        sha: commit.sha
+        commit: commit.commit
+        stats: commit.stats
+    result = result.concat batchResult
+
+    remaining = remaining[pageSize..]
+    console.log "remaining:", remaining.length
 
   result
 
@@ -74,7 +82,7 @@ fetchAll = ->
 
   for repo in configs.repos
     result = await fetchCommits repo
-    data.push result
+    data.push [repo, result]
 
   # console.log JSON.stringify(data, null, 2)
 
