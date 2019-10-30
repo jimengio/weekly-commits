@@ -3,15 +3,15 @@ fs = require 'fs'
 axios = require 'axios'
 {DateTime} = require 'luxon'
 
-configs = require './data/configs'
+configs = require '../data/configs'
 
 headers =
   Authorization: "token #{configs.token}"
 
 today = DateTime.local()
 
-startTime = today.minus(month: 1).startOf('month')
-endTime = today.minus(month: 1).endOf('month')
+startTime = today.minus(week: 1).startOf('week')
+endTime = today.minus(week: 1).endOf('week')
 
 console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
 
@@ -87,7 +87,7 @@ fetchAll = ->
 
   # console.log JSON.stringify(data, null, 2)
 
-  fs.writeFileSync "data/commits.json", JSON.stringify(data, null, 2)
+  fs.writeFileSync "../data/commits.json", JSON.stringify(data, null, 2)
 
 console.log "\nMight take very long time to grab all data...\n"
 

@@ -116,6 +116,7 @@
                                               (fn [x0] (+ x0 (:delete record)))))))
                                      {:add 0, :delete 0}))))))))]
     (fs/writeFileSync (path/join js/__dirname "result.edn") (write-edn result))
+    (println "Wrote to file result.edn .")
     (println (string/join "" (format-records result)))))
 
 (defn write-info! []
