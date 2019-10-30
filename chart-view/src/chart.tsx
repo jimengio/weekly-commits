@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { css, cx } from "emotion";
 
-import commitData from "../data/commits.json";
+import commitData from "../../data/commits.json";
 import produce from "immer";
 import ReactECharts from "echarts-for-react";
 
