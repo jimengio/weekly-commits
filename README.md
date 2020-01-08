@@ -21,7 +21,10 @@ yarn coffee grab.coffee
 
 抓取的数据在 `data/commits.json` 当中.
 
-另外的路由当中的 analyzer 读取这里的数据进行聚合展示.
+然后可以通过进入子目录启动应用进行分析:
+
+- [Charts](./chart-view/) 用 ECharts 展示 commits 数量相关信息.
+- [cljs analyzer](./cljs/) 用 ClojureScript Node.js 脚本对数据做分组展示.
 
 ### License
 

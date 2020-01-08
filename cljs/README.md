@@ -1,10 +1,11 @@
 ## Data Analyzer
 
-> in ClojureScript.
-
 ### 用法
 
+依赖 JVM, Maven, Node.js 等...
+
 ```bash
+yarn
 yarn watch
 ```
 
@@ -20,6 +21,10 @@ node target/server.js
   (comment write-info!)
   (daily-commits!))
 ```
+
+- `display-graph!` 按 人/项目 罗列修改代码量
+- `write-info!` 按 人/项目 分组以后直接把信息写入 `target/result.edn`
+- `daily-commits!` 罗列每 天/人 的 commits 数量
 
 ### Workflow
 

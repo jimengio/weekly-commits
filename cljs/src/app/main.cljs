@@ -146,7 +146,7 @@
                                     (vec))))))))]
     (fs/writeFileSync (path/join js/__dirname "result.edn") (write-edn result))))
 
-(defn analyze! [] (display-graph!) (comment write-info!) (comment daily-commits!))
+(defn analyze! [] (comment display-graph!) (comment write-info!) (daily-commits!))
 
 (defn main! [] (println "Started.") (analyze!))
 

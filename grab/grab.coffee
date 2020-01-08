@@ -10,8 +10,8 @@ headers =
 
 today = DateTime.local()
 
-startTime = today.minus(week: 1).startOf('week')
-endTime = today.minus(week: 1).endOf('week')
+startTime = today.minus(month: 3).startOf('week')
+endTime = today.endOf('week')
 
 console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
 
