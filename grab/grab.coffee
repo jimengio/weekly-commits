@@ -10,10 +10,26 @@ headers =
 
 today = DateTime.local()
 
-startTime = today.minus(month: 3).startOf('week')
-endTime = today.endOf('week')
+startTime = today.minus(month: 3).startOf('month')
+endTime = today.endOf('month')
 
 console.log "Grabbing data from", startTime.toFormat('yyyy-MM-dd'), endTime.toFormat('yyyy-MM-dd')
+
+timeout = (x) ->
+  new Promise (resolve, reject) ->
+    setTimeout resolve, x
+
+checkRateLimit = () ->
+  try
+    result = await axios
+      baseURL: 'https://api.github.com/'
+      url: "/users/octocat"
+      headers: headers
+    console.log result.headers
+  catch error
+    # 5k per hour limit
+    console.log "Failed to check", error?.response?.headers
+    throw error
 
 fetchSingleCommit = (repo, hash) ->
   result = await axios
@@ -30,22 +46,27 @@ fetchCommits = (repo) ->
   page = 1
 
   while true
-    response = await axios
-      baseURL: 'https://api.github.com/'
-      url: "/repos/#{repo}/commits"
-      headers: headers
-      params:
-        since: startTime.toISO()
-        until: endTime.toISO()
-        per_page: 200
-        page: page
+    console.log "Fetching commits for", repo
+    try
+      response = await axios
+        baseURL: 'https://api.github.com/'
+        url: "/repos/#{repo}/commits"
+        headers: headers
+        params:
+          since: startTime.toISO()
+          until: endTime.toISO()
+          per_page: 200
+          page: page
 
-    list = list.concat response.data
-    if response.headers.link?
-      if not (response.headers.link.includes 'rel="last"')
+      list = list.concat response.data
+      if response.headers.link?
+        if not (response.headers.link.includes 'rel="last"')
+          break
+      else
         break
-    else
-      break
+    catch error
+      console.error "Failed to load commits of", repo
+      console.error error
 
     page = page + 1
     console.log "continue next page", page
@@ -59,27 +80,36 @@ fetchCommits = (repo) ->
   remaining = list
 
   while remaining.length > 0
-    try
-      batchResult = await Promise.all remaining[...pageSize].map (c) ->
+    chunk = remaining[...pageSize]
+    remaining = remaining[pageSize..]
+
+    console.log "Trying with chunk", chunk.length
+
+    await Promise.all chunk.map (c) ->
+      try
         commit = await fetchSingleCommit(repo, c.sha)
-        return
+        data =
           sha: commit.sha
           commit: commit.commit
           stats: commit.stats
-      result = result.concat batchResult
-    catch error
-      console.error "Failed to fetch, would retry"
-      if error.isAxiosError
-        console.log error.code, error.config
-      continue
+        result.push data
 
-    remaining = remaining[pageSize..]
-    console.log "remaining:", remaining.length
+      catch error
+        if error.isAxiosError
+          console.log error.code, error.config
+
+        remaining.push c
+        # await timeout(1000)
+        console.log "Failed to fetch, adding to remaining(#{remaining.length})", c
+
+    console.error "Retry from remaining", remaining.length
 
   result
 
 fetchAll = ->
   data = []
+
+  await checkRateLimit()
 
   for repo in configs.repos
     result = await fetchCommits repo
