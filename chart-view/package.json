@@ -11,7 +11,7 @@
     "echarts": "^4.3.0",
     "echarts-for-react": "^2.0.15-beta.0",
     "emotion": "^10.0.17",
-    "immer": "^4.0.0",
+    "immer": "^8.0.1",
     "luxon": "^1.17.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
