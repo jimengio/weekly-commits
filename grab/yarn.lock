@@ -34,10 +34,10 @@ is-buffer@^2.0.2:
   resolved "https://registry.npmjs.org/is-buffer/-/is-buffer-2.0.4.tgz#3e572f23c8411a5cfd9557c849e3665e0b290623"
   integrity sha512-Kq1rokWXOPXWuaMAqZiJW4XxsmD9zGx9q4aePabbn3qCRGedtH7Cm+zV8WETitMfu1wdh+Rvd6w5egwSngUX2A==
 
-luxon@^1.17.2:
-  version "1.20.0"
-  resolved "https://registry.npmjs.org/luxon/-/luxon-1.20.0.tgz#5ea35420b16baa94f255883865bf43381c828c34"
-  integrity sha512-2CT/4Du/PS64ayCpZOt2VWeiw0Hk77f3SvrAHt1AE2MB1aSHh/6J1QcW+lDFxdpx0hoHZJ+fEKJUybrsK96vUQ==
+luxon@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.5.2.tgz#17ed497f0277e72d58a4756d6a9abee4681457b6"
+  integrity sha512-Yg7/RDp4nedqmLgyH0LwgGRvMEKVzKbUdkBYyCosbHgJ+kaOUx0qzSiSatVc3DFygnirTPYnMM2P5dg2uH1WvA==
 
 ms@2.0.0:
   version "2.0.0"
